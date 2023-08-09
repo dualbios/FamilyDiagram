@@ -1,6 +1,5 @@
 ﻿using Microsoft.FamilyShowLib;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +26,7 @@ namespace FamilyTree.Diagram.Test.App
         public MainWindow()
         {
             InitializeComponent();
+            familyTreeCreator = new FamilyTreeCreator();
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -35,114 +35,35 @@ namespace FamilyTree.Diagram.Test.App
             if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 new GedcomImport().Import(PeopleCollection, ofd.FileName);
-                Person current = PeopleCollection[15];
-                CreateTree(PeopleCollection, current);
+
+                People.ItemsSource = PeopleCollection;
             }
         }
 
-        private HashSet<Person> visitedPersons = new();
+        private readonly FamilyTreeCreator familyTreeCreator;
 
-        private List<DiagramItem> Families = new();
-
-        private void CreateTree(PeopleCollection peopleCollection, Person current)
+        private void People_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DiagramItem grandPaItem = new() { Persons = current.Parents[0].Parents, Generation = -2 };
-            DiagramItem grandMaItem = new() { Persons = current.Parents[1].Parents, Generation = -2 };
-            Families.Clear();
-            Families.Add(grandPaItem);
-            Families.Add(grandMaItem);
-            DrillDown(grandPaItem, -1);
-            DrillDown(grandMaItem, -1);
-            DrillUp(grandPaItem);
-            DrillUp(grandMaItem);
-
-
-            foreach (DiagramItem f in Families.Where(x => x.Generation == 0))
+            if (People.SelectedItem is Person person)
             {
-                CalcChildrenWidth(f);
-            }
-
-            Dictionary<int, int> dictionary = Families.GroupBy(x => x.Generation)
-                                                      .ToDictionary(k => k.Key, v => v.Sum(x => x.Width));
-        }
-
-        private void DrillUp(DiagramItem item)
-        {
-            foreach (Person person in item.Persons)
-            {
-                if (Families.FirstOrDefault(x => person.Parents.Count > 1
-                                                 && x.Persons.Contains(person.Parents[0])
-                                                 && x.Persons.Contains(person.Parents[1])) == null)
-                {
-                    DiagramItem di = new()
-                    {
-                        Children = new List<Person> { person },
-                        Generation = item.Generation - 1,
-                        Persons = person.Parents
-                    };
-                    Families.Add(di);
-                    DrillUp(di);
-                }
+                DrawTree(person);
             }
         }
 
-        private void DrillDown(DiagramItem di, int generation)
+        private void DrawTree(Person person)
         {
-            foreach (Person child in di.Persons.SelectMany(x => x.Children).Distinct())
-            {
-                if (!di.Children.Contains(child))
-                {
-                    di.Children.Add(child);
-                    foreach (Person spouse in child.Spouses)
-                    {
-                        if (Families.FirstOrDefault(x => x.Persons.Contains(child) && x.Persons.Contains(spouse)) ==
-                            null)
-                        {
-                            DiagramItem dd = new()
-                            {
-                                Persons = new[] { child, spouse },
-                                Generation = generation,
-                                Width = 2
-                            };
-                            Families.Add(dd);
-                            DrillDown(dd, generation + 1);
-                        }
-                    }
-                }
-            }
-        }
+            IEnumerable<DiagramItem> families = familyTreeCreator.CreateTree(PeopleCollection, person);
 
-        private int CalcChildrenWidth(DiagramItem family)
-        {
-            int width = 0;
-            IEnumerable<DiagramItem?> items = family.Children
-                                                    .Select(x => Families.FirstOrDefault(f => f.Persons.Contains(x)))
-                                                    .Where(x => x != null)
-                                                    .ToList();
-            foreach (DiagramItem diagramItem in items)
-            {
-                width += CalcChildrenWidth(diagramItem);
-            }
+            Dictionary<int, List<Person>> dictionary = families.GroupBy(x => x.Generation)
+                                                               .OrderBy(x => x.Key)
+                                                               .ToDictionary(
+                                                                   k => k.Key,
+                                                                   v => v.SelectMany(x => x.Persons).ToList());
 
-            width += family.Children.Count - items.Count();
+            FamilyTreeDiagram.PeopleCollection = PeopleCollection;
+            FamilyTreeDiagram.FamilyCollection = null;
+            FamilyTreeDiagram.FamilyCollection = families;
 
-            family.Width = Math.Max(2, width);
-            return family.Width;
-        }
-    }
-
-    public class DiagramItem
-    {
-        public IList<Person> Persons { get; set; } = new List<Person>();
-        public IList<Person> Children { get; set; } = new List<Person>();
-
-        public int Generation { get; set; }
-
-        public int Width { get; set; }
-
-        public override string ToString()
-        {
-            return $"{Persons[0]}, {Persons[1]}";
         }
     }
 }

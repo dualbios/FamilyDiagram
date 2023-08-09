@@ -9,25 +9,73 @@
     <Window.Resources>
         <!--  scroll viewer  -->
         <Style x:Key="ScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
-            <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
-            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Visible" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Visible" />
         </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
             <Button Content="Open" Click="ButtonBase_OnClick"></Button>
         </StackPanel>
 
-        <ScrollViewer x:Name="ScrollViewer" Style="{StaticResource ScrollViewerStyle}" 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="People"
+                     SelectionChanged="People_OnSelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding FullName}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ScrollViewer x:Name="ScrollViewer" 
+                          Style="{StaticResource ScrollViewerStyle}"
+                          Grid.Column="1">
+                <Grid x:Name="Grid">
+                    <local:FamilyTreeControl x:Name="FamilyTreeDiagram" />
+                </Grid>
+            </ScrollViewer>
+
+            <!--<ListBox x:Name="ChartListBox"
+                     Grid.Column="1">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1"
+                                            BorderBrush="DodgerBlue" 
+                                            Margin="4" >
+                                        <TextBlock Text="{Binding}" Margin="4" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>-->
+        </Grid>
+
+        <!--<ScrollViewer x:Name="ScrollViewer" Style="{StaticResource ScrollViewerStyle}" 
                       Grid.Row="1">
             <Grid x:Name="Grid">
-                <!--<diagram:Diagram x:Name="Diagram" />-->
+                --><!--<diagram:Diagram x:Name="Diagram" />--><!--
             </Grid>
-        </ScrollViewer>
+        </ScrollViewer>-->
     </Grid>
 </Window>
