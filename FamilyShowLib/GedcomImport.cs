@@ -161,7 +161,7 @@ namespace Microsoft.FamilyShowLib
       }
 
       // See if a marriage (or divorce) is specified.
-      if (node.SelectSingleNode("MARR") != null || node.SelectSingleNode("DIV") != null)
+      //if (node.SelectSingleNode("MARR") != null || node.SelectSingleNode("DIV") != null)
       {
         // Get dates.
         DateTime? marriageDate = GetValueDate(node, "MARR/DATE");

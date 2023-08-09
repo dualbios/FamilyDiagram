@@ -93,7 +93,7 @@ namespace Microsoft.FamilyShowLib
         }
 
         // Clean up the line by only allowing viewable characters.
-        text = regexToClean.Replace(text, "");
+        //text = regexToClean.Replace(text, "");
 
         // Get the parts of the line.
         Match match = regexToSplit.Match(text);
