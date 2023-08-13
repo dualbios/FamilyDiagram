@@ -1,0 +1,53 @@
+﻿@page "/counter"
+@using TestBlazorDrawing.Elements
+@using Microsoft.FamilyShowLib
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<div style="overflow-y: scroll; height:100px; width:100px; overflow-x:scroll">
+    <SvgHolder >
+        @for (int i = 0; i < 50; i += 10)
+        {
+            <SvgSample Cx="@i"/>
+        }
+    </SvgHolder>
+</div>
+
+<div>
+    @foreach (var p in @Persons)
+    {
+        <SvgHolder>
+            <PersonElement Person="@p"></PersonElement>
+        </SvgHolder>
+    }
+</div>
+
+@code {
+    private RenderFragment childContent { get; set; }
+    private IEnumerable<Person> Persons = null;
+
+    protected override void OnInitialized()
+    {
+        Persons = new[]
+        {
+            //new Person("First", "Last", Gender.Male),
+            new Person("First - F", "Last - F", Gender.Female),
+        };
+    }
+
+
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+   
+}

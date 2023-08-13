@@ -1,0 +1,134 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h1>childContent</h1>
+
+<svg height="150" width="500" zoomAndPan="magnify" viewBox="0 0 300 100">
+@childContent
+</svg>
+
+@code {
+
+    private RenderFragment textContent = (__builder) =>
+    {
+        <input type="text" value="hola"/>
+        ;
+    };
+
+    private RenderFragment svgContent = (__builder) =>
+    {
+        <ellipse cx="240" cy="100" rx="220" ry="30" style="fill:purple"/>
+        <g transform="translate(50,2.5) rotate(0)">
+            <ellipse cx="0" cy="0" rx="190" ry="20" style="fill:lime"/>
+            <g transform="scale(0.5, 2)">
+                <ellipse cx="210" cy="45" rx="170" ry="15" style="fill:yellow"/>
+            </g>
+        </g>
+
+
+    };
+
+    private RenderFragment childContent { get; set; }
+
+    private RenderFragment AddContent() => builder =>
+    {
+        builder.AddContent(1, textContent);
+        builder.AddContent(1, svgContent);
+        builder.AddContent(1, PersonFragment);
+
+        builder.AddContent(1, AddManElement());
+    };
+
+    protected override void OnInitialized()
+    {
+        childContent = AddContent();
+    }
+
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+    }
+
+    public class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string? Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+
+    private RenderFragment AddManElement() => builder =>
+    {
+        builder.AddContent(1, PersonFragment);
+        builder.AddContent(1, ManBody);
+    };
+
+
+    private RenderFragment PersonFragment = (__builder) =>
+    {
+        <rect width="150" height="75" rx="5" style="fill:none;stroke:blue;stroke-width:2"/>
+    };
+
+    private RenderFragment ManBody = (__builder) =>
+    {
+        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+             width="100px" height="100px" viewBox="0 0 556.38 556.38"
+             xml:space="preserve">
+            <g>
+                <g>
+                    <path d="M188.434,315.146c11.767,0,21.31-9.534,21.315-21.301c0.009-0.004,0.028-130.165,0.028-130.165
+			c0-1.224,0.99-2.218,2.219-2.218h4.513c1.224,0,2.219,0.99,2.219,2.218c0,0,0,365.168,0,365.211
+			c0,15.181,12.307,27.487,27.487,27.487c15.181,0,27.487-12.307,27.487-27.487c0-0.043,0-214.884,0-214.884
+			c0-1.568,0.727-2.219,2.271-2.219h4.432c1.549,0,2.271,0.655,2.271,2.219c0,0,0,214.846,0,214.884
+			c0,15.181,12.308,27.487,27.488,27.487c15.18,0,27.487-12.307,27.487-27.487c0-0.043,0-365.211,0-365.211
+			c0-1.224,0.989-2.218,2.218-2.218h4.514c1.225,0,2.219,0.99,2.219,2.218c0,0,0.02,130.161,0.028,130.165
+			c0.01,11.767,9.549,21.301,21.315,21.301c11.771,0,21.319-9.543,21.319-21.319c0-0.067,0-146.359,0-148.104
+			c0-29.17-22.443-51.614-50.49-51.614c-0.712,0-38.417,0-56.099,0c0,0-3.543,0-8.974,0c-17.681,0-55.386,0-56.098,0
+			c-28.052,0-50.49,22.438-50.49,51.614c0,1.745,0,148.037,0,148.104C167.114,305.604,176.658,315.146,188.434,315.146z"/>
+                    <circle cx="278.192" cy="40.904" r="40.904"/>
+                </g>
+            </g>
+        </svg>
+    };
+
+}
