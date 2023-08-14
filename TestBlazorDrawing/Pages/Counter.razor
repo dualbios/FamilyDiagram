@@ -19,25 +19,41 @@
     </SvgHolder>
 </div>
 
-<div>
-    @foreach (var p in @Persons)
-    {
-        <SvgHolder>
-            <PersonElement Person="@p"></PersonElement>
-        </SvgHolder>
-    }
+<div style="overflow-y: scroll; height:400px;overflow-x:scroll">
+    <svg width="1200" height="600" transform="scale(1,1)">
+            <PersonBlock Persons="@Persons" Width="900" Left="0" Top="0"/>
+            <PersonBlock Persons="@Persons2" Width="1000" Left="50" Top="100"/>
+            <PersonBlock Persons="@Persons3" Width="300" Left="900" Top="0"/>
+        
+    </svg>
 </div>
 
+
 @code {
-    private RenderFragment childContent { get; set; }
-    private IEnumerable<Person> Persons = null;
+    private IList<Person> Persons = null;
+    private IList<Person> Persons2 = null;
+    private IList<Person> Persons3 = null;
 
     protected override void OnInitialized()
     {
         Persons = new[]
         {
-            //new Person("First", "Last", Gender.Male),
             new Person("First - F", "Last - F", Gender.Female),
+            new Person("First", "Last", Gender.Male),
+            new Person("First - F", "Last - F", Gender.Female),
+            new Person("First", "Last", Gender.Male),
+        };
+        Persons3 = new[]
+        {
+            new Person("First - F", "Last - F", Gender.Female),
+        };
+        Persons2 = new[]
+        {
+            new Person("First - F", "Last - F", Gender.Female),
+            new Person("First", "Last", Gender.Male),
+            new Person("First", "Last", Gender.Male),
+            new Person("First", "Last", Gender.Male),
+            new Person("First", "Last", Gender.Male),
         };
     }
 
@@ -49,5 +65,5 @@
         currentCount++;
     }
 
-   
+
 }

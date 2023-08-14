@@ -1,0 +1,30 @@
+﻿@using Microsoft.FamilyShowLib;
+
+<svg>
+    <rect width="@Width" height="75" x="@Left" y="@Top" style="fill:none;stroke:gold;stroke-width:1">
+    </rect>
+</svg>
+@{
+    int l = (Width - Persons.Count() * 150) / 2;
+    for (int i = 0; i < Persons.Count(); i++)
+    {
+        var p = Persons.ElementAt(i);
+        <PersonElement Person="p" Left="Left + l + i * 150" Top="Top"></PersonElement>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public IEnumerable<Person> Persons { get; set; }
+
+    [Parameter]
+    public int Width { get; set; }
+
+    [Parameter]
+    public int Left { get; set; }
+
+    [Parameter]
+    public int Top { get; set; }
+
+}
