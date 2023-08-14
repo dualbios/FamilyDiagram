@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Microsoft.FamilyShowLib;
+﻿namespace FamilyShow.Lib.Net7;
 
 public class FamilyTreeCreator
 {
@@ -26,19 +22,13 @@ public class FamilyTreeCreator
                                                         k => k.Key, v => v.SelectMany(x => x.Persons).ToList());
 
 
-        foreach (DiagramItem f in families.Where(x => x.Generation == -1))
-        {
-            CalcChildrenWidth(f);
-        }
+        foreach (DiagramItem f in families.Where(x => x.Generation == -1)) CalcChildrenWidth(f);
 
-        foreach (DiagramItem f in families.Where(x => x.Generation == -2))
-        {
-            CalcParentWidth(f);
-        }
+        foreach (DiagramItem f in families.Where(x => x.Generation == -2)) CalcParentWidth(f);
 
-        Dictionary<int, int> dictionary = families.GroupBy(x => x.Generation)
-                                                  .OrderBy(x => x.Key)
-                                                  .ToDictionary(k => k.Key, v => v.Sum(x => x.Width));
+        var dictionary = families.GroupBy(x => x.Generation)
+                                 .OrderBy(x => x.Key)
+                                 .ToDictionary(k => k.Key, v => v.Sum(x => x.Width));
 
         return families;
     }
@@ -46,7 +36,6 @@ public class FamilyTreeCreator
     private void DrillUp(DiagramItem item)
     {
         foreach (Person person in item.Persons)
-        {
             if (person.Parents.Count > 1 && families.FirstOrDefault(x => x.Persons.Contains(person.Parents[0])
                                                                          && x.Persons.Contains(
                                                                              person.Parents[1])) == null)
@@ -60,20 +49,17 @@ public class FamilyTreeCreator
                 families.Add(di);
                 DrillUp(di);
             }
-        }
     }
 
     private void DrillDown(DiagramItem di, int generation)
     {
         foreach (Person child in di.Persons.SelectMany(x => x.Children).Distinct())
-        {
             if (!di.Children.Contains(child))
             {
                 di.Children.Add(child);
                 if (child.Spouses.Any())
                 {
                     foreach (Person spouse in child.Spouses)
-                    {
                         if (families.FirstOrDefault(x => x.Persons.Contains(child) && x.Persons.Contains(spouse)) == null)
                         {
                             DiagramItem dd = new()
@@ -85,7 +71,6 @@ public class FamilyTreeCreator
                             families.Add(dd);
                             DrillDown(dd, generation + 1);
                         }
-                    }
                 }
                 else
                 {
@@ -98,17 +83,16 @@ public class FamilyTreeCreator
                     families.Add(dd);
                 }
             }
-        }
     }
 
     private int CalcParentWidth(DiagramItem family)
     {
-        int width = 0;
+        var width = 0;
         IEnumerable<DiagramItem> items = family.Persons
                                                .Select(x => families.FirstOrDefault(f => f.Children.Contains(x)))
                                                .Where(x => x != null)
                                                .Distinct()
-                                               .ToList()!;
+                                               .ToList();
         if (!items.Any())
         {
             family.Width = 2;
@@ -117,7 +101,7 @@ public class FamilyTreeCreator
 
         foreach (DiagramItem diagramItem in items)
         {
-            int parentWidth = CalcParentWidth(diagramItem);
+            var parentWidth = CalcParentWidth(diagramItem);
             width += parentWidth;
         }
 
@@ -132,25 +116,23 @@ public class FamilyTreeCreator
     private bool ListContains<T>(IEnumerable<T> source, IEnumerable<T> list)
     {
         foreach (T item in list)
-        {
             if (!source.Contains(item))
                 return false;
-        }
 
         return true;
     }
 
     private int CalcChildrenWidth(DiagramItem family)
     {
-        int width = 0;
+        var width = 0;
         IEnumerable<Person> children = family.Children.Where(x => ListContains(x.Parents, family.Persons)).ToList();
         IEnumerable<DiagramItem> items = children
                                          .SelectMany(x => families.Where(f => f.Persons.Contains(x)))
                                          .Where(x => x != null)
-                                         .ToList()!;
+                                         .ToList();
         foreach (DiagramItem diagramItem in items)
         {
-            int childrenWidth = CalcChildrenWidth(diagramItem);
+            var childrenWidth = CalcChildrenWidth(diagramItem);
             width += childrenWidth;
         }
 

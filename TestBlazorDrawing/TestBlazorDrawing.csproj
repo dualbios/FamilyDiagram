@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FamilyShowLib\FamilyShowLib.csproj" />
+    <ProjectReference Include="..\FamilyShow.Lib.Net7\FamilyShow.Lib.Net7.csproj" />
   </ItemGroup>
 
 </Project>

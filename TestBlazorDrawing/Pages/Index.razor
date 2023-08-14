@@ -2,7 +2,8 @@
 @using Blazor.Extensions; 
 @using Blazor.Extensions.Canvas
 @using Blazor.Extensions.Canvas.Canvas2D;
-@using Microsoft.FamilyShowLib;
+@using FamilyShow.Lib.Net7;
+@inject NavigationManager Navigation
 
 <InputFile OnChange="@LoadFiles" single />
 
@@ -11,6 +12,7 @@
     {
         MemoryStream ms = new MemoryStream();
         await e.File.OpenReadStream().CopyToAsync(ms);
+        ms.Position = 0;
         new GedcomImport().Import(GlobalState.Instance.PeopleCollection, ms);
         GlobalState.Instance.SelectedPerson = GlobalState.Instance.PeopleCollection[2];
 
@@ -21,6 +23,6 @@
                                                            .ToDictionary(
                                                                k => k.Key,
                                                                v => v.SelectMany(x => x.Persons).ToList());
-        
+        Navigation.NavigateTo("/Counter");
     }
 }

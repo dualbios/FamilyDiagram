@@ -1,6 +1,7 @@
-﻿using Microsoft.FamilyShowLib;
+﻿using FamilyShow.Lib.Net7;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace FamilyTree.Diagram.Test.App
             CommonOpenFileDialog ofd = new() { IsFolderPicker = false };
             if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                new GedcomImport().Import(PeopleCollection, ofd.FileName);
+                new GedcomImport().Import(PeopleCollection, File.OpenRead(ofd.FileName));
 
                 People.ItemsSource = PeopleCollection;
             }

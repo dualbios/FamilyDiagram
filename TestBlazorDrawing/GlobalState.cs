@@ -1,4 +1,5 @@
-﻿using Microsoft.FamilyShowLib;
+﻿
+using FamilyShow.Lib.Net7;
 
 namespace TestBlazorDrawing;
 

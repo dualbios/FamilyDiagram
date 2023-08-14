@@ -7,12 +7,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FamilyShowLib\FamilyShowLib.csproj" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\FamilyShow.Lib.Net7\FamilyShow.Lib.Net7.csproj" />
 	</ItemGroup>
 
 </Project>

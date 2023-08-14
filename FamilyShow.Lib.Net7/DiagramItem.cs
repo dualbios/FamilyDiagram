@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Microsoft.FamilyShowLib;
+﻿namespace FamilyShow.Lib.Net7;
 
 public class DiagramItem
 {

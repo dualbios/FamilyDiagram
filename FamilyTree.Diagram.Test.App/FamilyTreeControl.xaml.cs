@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
-using Microsoft.FamilyShowLib;
+using FamilyShow.Lib.Net7;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using Orientation = System.Windows.Controls.Orientation;
 using UserControl = System.Windows.Controls.UserControl;
@@ -123,7 +123,7 @@ namespace FamilyTree.Diagram.Test.App
         }
 
         public static readonly DependencyProperty PeopleCollectionProperty =
-            DependencyProperty.Register(nameof(Microsoft.FamilyShowLib.PeopleCollection),
+            DependencyProperty.Register(nameof(FamilyShow.Lib.Net7.PeopleCollection),
                                         typeof(PeopleCollection),
                                         typeof(FamilyTreeControl),
                                         new PropertyMetadata(null));
