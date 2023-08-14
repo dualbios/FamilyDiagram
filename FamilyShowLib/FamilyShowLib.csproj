@@ -80,10 +80,12 @@
     <Compile Include="AgeGroup.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Contact.cs" />
+    <Compile Include="DiagramItem.cs" />
     <Compile Include="EventBaptism.cs" />
     <Compile Include="ExportTag.cs" />
     <Compile Include="Family.cs" />
     <Compile Include="FamilyMap.cs" />
+    <Compile Include="FamilyTreeCreator.cs" />
     <Compile Include="GedcomConverter.cs" />
     <Compile Include="GedcomExport.cs" />
     <Compile Include="GedcomIdMap.cs" />

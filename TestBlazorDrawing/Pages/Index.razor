@@ -2,59 +2,25 @@
 @using Blazor.Extensions; 
 @using Blazor.Extensions.Canvas
 @using Blazor.Extensions.Canvas.Canvas2D;
+@using Microsoft.FamilyShowLib;
 
-<div style="overflow-y: scroll; height:100px; width:100px; overflow-x:scroll">
-    
-    <BECanvas Width="300" Height="400" @ref="_canvasReference"></BECanvas>
+<InputFile OnChange="@LoadFiles" single />
 
-</div>
+@code {
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        MemoryStream ms = new MemoryStream();
+        await e.File.OpenReadStream().CopyToAsync(ms);
+        new GedcomImport().Import(GlobalState.Instance.PeopleCollection, ms);
+        GlobalState.Instance.SelectedPerson = GlobalState.Instance.PeopleCollection[2];
 
+        IEnumerable<DiagramItem> families = new FamilyTreeCreator().CreateTree(GlobalState.Instance.PeopleCollection, GlobalState.Instance.SelectedPerson);
 
-@code {  
-    private Canvas2DContext _context;  
-    protected BECanvasComponent _canvasReference;  
-    ItemMaster[] itemsArrys;  
-    private static readonly string[] pirChartColor = new [] {  
-        "#3090C7",  
-        "#BDEDFF",  
-        "#F9B7FF",  
-        "#736AFF",  
-        "#78C7C7",  
-        "#B048B5",  
-        "#4E387E",  
-        "#7FFFD4",  
-        "#3EA99F",  
-        "#EBF4FA",  
-        "#F9B7FF",  
-        "#8BB381",  
-    //"#6CBB3C", "#F87217", "#EAC117", "#EDDA74", "#CD7F32", "#CCFB5D", "#FDD017", "#9DC209", "#E67451", "#728C00","#617C58", "#64E986"  
-    };  
-    protected override async Task OnInitializedAsync() {  
-        itemsArrys = await new ItemMasterService().GetItemMasters();  
-    }  
-    protected override async Task OnAfterRenderAsync(bool firstRender) {  
-    //    int lastend = 0;  
-    //    int xSpace = 10;  
-    //    int XvalPosition = xSpace;  
-    //    int maxDataVal = itemsArrys.Max(row => row.SaleCount);  
-    //    int widthcalculation = (Convert.ToInt32(_canvasReference.Width) - 100) / itemsArrys.Length;  
-    //    int chartHeight = Convert.ToInt32(_canvasReference.Height) - 40;  
-    //    this._context = await this._canvasReference.CreateCanvas2DAsync();  
-    //    int colorval = 0;  
-    //// Draw the axises  
-    //    await this._context.BeginPathAsync();  
-    //    await this._context.MoveToAsync(xSpace, xSpace);  
-    //// first Draw Y Axis  
-    //    await this._context.LineToAsync(xSpace, chartHeight);  
-    //// Next draw the X-Axis
-    ///
-    ///
-        this._context = await this._canvasReference.CreateCanvas2DAsync();
-        await this._context.SetFillStyleAsync("red");
-
-        await this._context.FillRectAsync(10, 100, 100, 100);
-
-        await this._context.SetFontAsync("38px Calibri");
-        await this._context.StrokeTextAsync("Hello Blazor!!!", 5, 100);
-    }  
+        Dictionary<int, List<Person>> dictionary = families.GroupBy(x => x.Generation)
+                                                           .OrderBy(x => x.Key)
+                                                           .ToDictionary(
+                                                               k => k.Key,
+                                                               v => v.SelectMany(x => x.Persons).ToList());
+        
+    }
 }

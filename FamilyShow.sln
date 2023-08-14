@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyShow", "FamilyShow\Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestFamilyShow", "UnitTestFamilyShow\UnitTestFamilyShow.csproj", "{A5619A18-E92C-4D06-A847-33EC178E20F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyTree.Diagram.Test.App", "FamilyTree.Diagram.Test.App\FamilyTree.Diagram.Test.App.csproj", "{FFD2A34E-DB4E-4B3A-A0B4-C4224895A295}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBlazorDrawing", "TestBlazorDrawing\TestBlazorDrawing.csproj", "{292A0CCB-351E-493E-89B8-175EDB23ECB1}"
 EndProject
 Global
@@ -29,6 +31,10 @@ Global
 		{A5619A18-E92C-4D06-A847-33EC178E20F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5619A18-E92C-4D06-A847-33EC178E20F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5619A18-E92C-4D06-A847-33EC178E20F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD2A34E-DB4E-4B3A-A0B4-C4224895A295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD2A34E-DB4E-4B3A-A0B4-C4224895A295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD2A34E-DB4E-4B3A-A0B4-C4224895A295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD2A34E-DB4E-4B3A-A0B4-C4224895A295}.Release|Any CPU.Build.0 = Release|Any CPU
 		{292A0CCB-351E-493E-89B8-175EDB23ECB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{292A0CCB-351E-493E-89B8-175EDB23ECB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{292A0CCB-351E-493E-89B8-175EDB23ECB1}.Release|Any CPU.ActiveCfg = Release|Any CPU

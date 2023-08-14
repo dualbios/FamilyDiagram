@@ -35,6 +35,44 @@ namespace Microsoft.FamilyShowLib
     /// <summary>
     /// Populate the people collection with information from the GEDCOM file.
     /// </summary>
+    public void Import(PeopleCollection peopleCollection, Stream stream)
+    {
+      // Clear current content.
+      peopleCollection.Clear();
+
+      // First convert the GEDCOM file to an XML file so it's easier to parse,
+      // the temp XML file is deleted when importing is complete.
+      //string xmlFilePath = Path.GetTempFileName();
+      //Console.WriteLine($"------- {xmlFilePath}");
+      MemoryStream ms = new MemoryStream();
+
+      try
+      {
+        people = peopleCollection;
+
+        // Convert the GEDCOM file to a temp XML file.
+        Stream outFile = GedcomConverter.ConvertToXml(new StreamReader(stream), true);
+        doc = new XmlDocument();
+        doc.Load(outFile);
+
+        // Import data from the temp XML file to the people collection.
+        ImportPeople();
+        ImportFamilies();
+
+        // The collection requires a primary-person, use the first
+        // person added to the collection as the primary-person.
+        if (peopleCollection.Count > 0)
+        {
+          peopleCollection.Current = peopleCollection[0];
+        }
+      }
+      finally
+      {
+        // Delete the temp XML file.
+        //File.Delete(xmlFilePath);
+      }
+    }
+    
     public void Import(PeopleCollection peopleCollection, string gedcomFilePath)
     {
       // Clear current content.
@@ -161,7 +199,7 @@ namespace Microsoft.FamilyShowLib
       }
 
       // See if a marriage (or divorce) is specified.
-      if (node.SelectSingleNode("MARR") != null || node.SelectSingleNode("DIV") != null)
+      //if (node.SelectSingleNode("MARR") != null || node.SelectSingleNode("DIV") != null)
       {
         // Get dates.
         DateTime? marriageDate = GetValueDate(node, "MARR/DATE");
