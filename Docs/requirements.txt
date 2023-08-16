@@ -1,0 +1,17 @@
+FR
+- login/logout
+- allow users to set a subscription
+- create a tree
+- create a person for a tree
+- add/remove a person from a tree
+- make connections between persons
+- display diagrams (TODO: on the server side or app side)
+- do all actions under a subscription
+- store photo content for a person
+- support person history records
+- search person by criteria
+
+NFR
+- scalability
+- consistency
+- availability
