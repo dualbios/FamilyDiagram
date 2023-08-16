@@ -10,6 +10,7 @@ public class GlobalState
     public Person SelectedPerson { get; set; }
 
     public static GlobalState Instance { get; } = _instanse ??= new GlobalState();
+    public IEnumerable<DiagramItem> Families { get; set; }
 
     private GlobalState()
     {

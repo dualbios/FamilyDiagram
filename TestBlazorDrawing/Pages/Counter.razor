@@ -19,42 +19,35 @@
     </SvgHolder>
 </div>
 
-<div style="overflow-y: scroll; height:400px;overflow-x:scroll">
-    <svg width="1200" height="600" transform="scale(1,1)">
-            <PersonBlock Persons="@Persons" Width="900" Left="0" Top="0"/>
-            <PersonBlock Persons="@Persons2" Width="1000" Left="50" Top="100"/>
-            <PersonBlock Persons="@Persons3" Width="300" Left="900" Top="0"/>
-        
-    </svg>
-</div>
+@if (Rows != null)
+{
+    <div style="overflow-y: scroll; width:900px;overflow-x:scroll">
+        <svg width="@ContainerWidth" height="600" transform="scale(1,1)">
+            @for (int i = 0; i < Rows.Keys.Count; i++)
+            {
+                <PersonBlock Persons="Rows[Rows.Keys.ElementAt(i)]" Width="ContainerWidth" Left="0" Top="i*80"/>
+            }
+        </svg>
+    </div>
+}
 
 
 @code {
-    private IList<Person> Persons = null;
-    private IList<Person> Persons2 = null;
-    private IList<Person> Persons3 = null;
+    Dictionary<int, List<Person>> Rows = null;
+    int ContainerWidth { get; set; }
+    string ContainerStyle { get; set; }
 
     protected override void OnInitialized()
     {
-        Persons = new[]
-        {
-            new Person("First - F", "Last - F", Gender.Female),
-            new Person("First", "Last", Gender.Male),
-            new Person("First - F", "Last - F", Gender.Female),
-            new Person("First", "Last", Gender.Male),
-        };
-        Persons3 = new[]
-        {
-            new Person("First - F", "Last - F", Gender.Female),
-        };
-        Persons2 = new[]
-        {
-            new Person("First - F", "Last - F", Gender.Female),
-            new Person("First", "Last", Gender.Male),
-            new Person("First", "Last", Gender.Male),
-            new Person("First", "Last", Gender.Male),
-            new Person("First", "Last", Gender.Male),
-        };
+        Rows = GlobalState.Instance.Families.GroupBy(x => x.Generation)
+                                                           .OrderBy(x => x.Key)
+                                                           .ToDictionary(
+                                                               k => k.Key,
+                                                               v => v.SelectMany(x => x.Persons).ToList());
+        int maxWidth = Rows.Max(x => x.Value.Count);
+        ContainerWidth = 150 * maxWidth;
+
+        ContainerStyle = $"overflow-y: scroll; height:{ContainerStyle}px;overflow-x:scroll";
     }
 
 

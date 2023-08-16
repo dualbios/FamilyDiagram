@@ -16,13 +16,8 @@
         new GedcomImport().Import(GlobalState.Instance.PeopleCollection, ms);
         GlobalState.Instance.SelectedPerson = GlobalState.Instance.PeopleCollection[2];
 
-        IEnumerable<DiagramItem> families = new FamilyTreeCreator().CreateTree(GlobalState.Instance.PeopleCollection, GlobalState.Instance.SelectedPerson);
+        GlobalState.Instance.Families = new FamilyTreeCreator().CreateTree(GlobalState.Instance.PeopleCollection, GlobalState.Instance.SelectedPerson);
 
-        Dictionary<int, List<Person>> dictionary = families.GroupBy(x => x.Generation)
-                                                           .OrderBy(x => x.Key)
-                                                           .ToDictionary(
-                                                               k => k.Key,
-                                                               v => v.SelectMany(x => x.Persons).ToList());
         Navigation.NavigateTo("/Counter");
     }
 }
